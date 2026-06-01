@@ -12,22 +12,9 @@ pr-pilot automatically reviews your pull requests using Claude, posting structur
 
 ## Example output
 
-```
-## 🤖 pr-pilot Review
+![pr-pilot in action](docs/screenshot.png)
 
-## Summary
-This PR adds a user authentication middleware with JWT validation...
-
-## Issues
-- `auth/middleware.py` line 42: JWT secret is hardcoded. Use environment variables.
-- `auth/middleware.py` line 67: Missing token expiry check — tokens never expire.
-
-## Suggestions
-- Consider extracting the token decoder into a separate utility for testability.
-
-## Verdict
-❌ Request changes
-```
+> pr-pilot reviewed its own development PR and caught a real issue: a `.gitignore` security regression and an import placement bug.
 
 ---
 
@@ -37,9 +24,9 @@ This PR adds a user authentication middleware with JWT validation...
 
 In your repo: **Settings → Secrets and variables → Actions → New repository secret**
 
-| Name | Value |
-|------|-------|
-| `ANTHROPIC_API_KEY` | Your key from [console.anthropic.com](https://console.anthropic.com) |
+| Name                  | Value                                                            |
+| --------------------- | ---------------------------------------------------------------- |
+| `ANTHROPIC_API_KEY` | Your key from[console.anthropic.com](https://console.anthropic.com) |
 
 ### 2. Add the workflow
 
@@ -60,7 +47,7 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      - uses: marianamartins/pr-pilot@main
+      - uses: Mariana-Martins-R/pr-pilot@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token:      ${{ secrets.GITHUB_TOKEN }}
@@ -73,11 +60,11 @@ That's it — open a PR and pr-pilot will comment automatically.
 
 ## Review styles
 
-| Style | Behaviour |
-|-------|-----------|
-| `strict` | Flags everything — bugs, nits, style, refactor suggestions |
-| `balanced` | Highlights real bugs and meaningful improvements *(default)* |
-| `lenient` | Bugs and security issues only, encouraging tone |
+| Style        | Behaviour                                                     |
+| ------------ | ------------------------------------------------------------- |
+| `strict`   | Flags everything — bugs, nits, style, refactor suggestions   |
+| `balanced` | Highlights real bugs and meaningful improvements*(default)* |
+| `lenient`  | Bugs and security issues only, encouraging tone               |
 
 Set via the `review_style` input or the `REVIEW_STYLE` repository variable.
 
