@@ -7,6 +7,7 @@ import sys
 import json
 import anthropic
 from github import Github
+from github import Auth
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
@@ -91,7 +92,6 @@ def post_comment(pr, review_text: str) -> None:
 def main():
     print(f"🔍 Reviewing PR #{PR_NUMBER} in {GITHUB_REPOSITORY} (style: {REVIEW_STYLE})")
 
-    from github import Auth
     gh   = Github(auth=Auth.Token(GITHUB_TOKEN))
     repo = gh.get_repo(GITHUB_REPOSITORY)
 
