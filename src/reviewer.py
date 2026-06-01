@@ -7,9 +7,6 @@ import sys
 import json
 import anthropic
 from github import Github
-from dotenv import load_dotenv
-
-load_dotenv()
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
@@ -68,7 +65,7 @@ def review_diff(diff: str, style: str) -> str:
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
     message = client.messages.create(
-        model="claude-sonnet-4-20250514",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         system=SYSTEM_PROMPT.format(style=style),
         messages=[
@@ -94,7 +91,8 @@ def post_comment(pr, review_text: str) -> None:
 def main():
     print(f"🔍 Reviewing PR #{PR_NUMBER} in {GITHUB_REPOSITORY} (style: {REVIEW_STYLE})")
 
-    gh   = Github(GITHUB_TOKEN)
+    from github import Auth
+    gh   = Github(auth=Auth.Token(GITHUB_TOKEN))
     repo = gh.get_repo(GITHUB_REPOSITORY)
 
     diff, pr = get_pr_diff(repo, PR_NUMBER)
