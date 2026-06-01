@@ -1,0 +1,41 @@
+name: "pr-pilot"
+description: "AI-powered pull request code reviewer using Claude"
+author: "Mariana Martins"
+
+branding:
+  icon: "eye"
+  color: "blue"
+
+inputs:
+  anthropic_api_key:
+    description: "Anthropic API key"
+    required: true
+  github_token:
+    description: "GitHub token for posting comments"
+    required: true
+  review_style:
+    description: "Review style: strict | balanced | lenient"
+    required: false
+    default: "balanced"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install dependencies
+      shell: bash
+      run: pip install anthropic PyGithub python-dotenv
+
+    - name: Run reviewer
+      shell: bash
+      env:
+        ANTHROPIC_API_KEY: ${{ inputs.anthropic_api_key }}
+        GITHUB_TOKEN:      ${{ inputs.github_token }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        PR_NUMBER:         ${{ github.event.pull_request.number }}
+        REVIEW_STYLE:      ${{ inputs.review_style }}
+      run: python ${{ github.action_path }}/src/reviewer.py
